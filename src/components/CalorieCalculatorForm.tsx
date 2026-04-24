@@ -1,14 +1,16 @@
 export default function CalorieCalculatorForm() {
   return (
-    <section className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-        Calorie Calculator
-      </h1>
-      <p className="mt-2 text-sm text-slate-600">
-        Fill out your details to estimate your daily calorie needs.
-      </p>
+    <section className="w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-900/5 sm:p-8">
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          Calorie Calculator
+        </h1>
+        <p className="mt-2 text-sm text-slate-600 sm:text-base">
+          Add your details to estimate your daily calorie target.
+        </p>
+      </header>
 
-      <form className="mt-6 space-y-5">
+      <form className="grid grid-cols-1 gap-4 sm:grid-cols-2" aria-label="Calorie calculator form">
         <div className="space-y-2">
           <label htmlFor="age" className="text-sm font-medium text-slate-800">
             Age
@@ -20,13 +22,13 @@ export default function CalorieCalculatorForm() {
             inputMode="numeric"
             min={1}
             placeholder="e.g. 28"
-            className="h-12 w-full rounded-xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="h-12 w-full rounded-2xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="weight" className="text-sm font-medium text-slate-800">
-            Weight in kg
+            Weight (kg)
           </label>
           <input
             id="weight"
@@ -36,13 +38,13 @@ export default function CalorieCalculatorForm() {
             min={1}
             step="0.1"
             placeholder="e.g. 70"
-            className="h-12 w-full rounded-xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="h-12 w-full rounded-2xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="height" className="text-sm font-medium text-slate-800">
-            Height in cm
+            Height (cm)
           </label>
           <input
             id="height"
@@ -52,7 +54,7 @@ export default function CalorieCalculatorForm() {
             min={1}
             step="0.1"
             placeholder="e.g. 175"
-            className="h-12 w-full rounded-xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="h-12 w-full rounded-2xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           />
         </div>
 
@@ -64,7 +66,7 @@ export default function CalorieCalculatorForm() {
             id="gender"
             name="gender"
             defaultValue=""
-            className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="" disabled>
               Select gender
@@ -74,7 +76,7 @@ export default function CalorieCalculatorForm() {
           </select>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 sm:col-span-2">
           <label htmlFor="activityLevel" className="text-sm font-medium text-slate-800">
             Activity level
           </label>
@@ -82,7 +84,7 @@ export default function CalorieCalculatorForm() {
             id="activityLevel"
             name="activityLevel"
             defaultValue=""
-            className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             <option value="" disabled>
               Select activity level
@@ -96,11 +98,21 @@ export default function CalorieCalculatorForm() {
 
         <button
           type="submit"
-          className="mt-2 inline-flex h-12 w-full items-center justify-center rounded-xl bg-slate-900 px-6 text-base font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
+          className="sm:col-span-2 mt-1 inline-flex h-12 w-full items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-emerald-200"
         >
-          Calculate
+          Calculate Calories
         </button>
       </form>
+
+      <aside className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+        <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+          Your Results
+        </span>
+        <p className="mt-2 text-sm text-emerald-900">
+          Fill the form and tap calculate to view your estimated daily calorie
+          needs.
+        </p>
+      </aside>
     </section>
   );
 }
