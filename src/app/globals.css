@@ -8,4 +8,13 @@
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: "Noto Sans Bengali", "Hind Siliguri", "Bangla Sangam MN", "Nirmala UI", "SolaimanLipi", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+input,
+select,
+button {
+  font: inherit;
 }
