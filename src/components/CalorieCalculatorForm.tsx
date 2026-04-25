@@ -1,28 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-
-type Sex = "male" | "female";
-type ActivityLevel = "sedentary" | "light" | "moderate" | "active";
-
-const ACTIVITY_FACTORS: Record<ActivityLevel, number> = {
-  sedentary: 1.2,
-  light: 1.375,
-  moderate: 1.55,
-  active: 1.725,
-};
-
-const ACTIVITY_LABELS: Record<ActivityLevel, string> = {
-  sedentary: "Sedentary (little or no exercise)",
-  light: "Light (exercise 1-3 days/week)",
-  moderate: "Moderate (exercise 3-5 days/week)",
-  active: "Active (exercise 6-7 days/week)",
-};
-
-function calculateBmr(weight: number, height: number, age: number, sex: Sex): number {
-  const base = 10 * weight + 6.25 * height - 5 * age;
-  return sex === "male" ? base + 5 : base - 161;
-}
+import { ACTIVITY_LABELS, ActivityLevel, calculateCalorieTargets, Sex } from "@/lib/calorie";
 
 export default function CalorieCalculatorForm() {
   const [age, setAge] = useState<number | "">("");
@@ -40,14 +19,7 @@ export default function CalorieCalculatorForm() {
       return null;
     }
 
-    const bmr = calculateBmr(weight, height, age, sex);
-    const maintenance = Math.round(bmr * ACTIVITY_FACTORS[activity]);
-
-    return {
-      maintenance,
-      loss: maintenance - 500,
-      gain: maintenance + 500,
-    };
+    return calculateCalorieTargets(weight, height, age, sex, activity);
   }, [activity, age, hasValidInputs, height, sex, weight]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
