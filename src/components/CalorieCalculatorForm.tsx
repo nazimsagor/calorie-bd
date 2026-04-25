@@ -6,21 +6,36 @@ import { ACTIVITY_LABELS, ActivityLevel, calculateCalorieTargets, Sex } from "@/
 export default function CalorieCalculatorForm() {
   const [age, setAge] = useState<number | "">("");
   const [weight, setWeight] = useState<number | "">("");
-  const [height, setHeight] = useState<number | "">("");
+  const [heightFeet, setHeightFeet] = useState<number | "">("");
+  const [heightInches, setHeightInches] = useState<number | "">("");
   const [sex, setSex] = useState<Sex>("male");
   const [activity, setActivity] = useState<ActivityLevel>("sedentary");
   const [submitted, setSubmitted] = useState(false);
 
+  const heightCm =
+    typeof heightFeet === "number" && typeof heightInches === "number"
+      ? heightFeet * 30.48 + heightInches * 2.54
+      : null;
+
   const hasValidInputs =
-    typeof age === "number" && age > 0 && typeof weight === "number" && weight > 0 && typeof height === "number" && height > 0;
+    typeof age === "number" &&
+    age > 0 &&
+    typeof weight === "number" &&
+    weight > 0 &&
+    typeof heightFeet === "number" &&
+    heightFeet >= 0 &&
+    typeof heightInches === "number" &&
+    heightInches >= 0 &&
+    heightCm !== null &&
+    heightCm > 0;
 
   const calories = useMemo(() => {
-    if (!hasValidInputs) {
+    if (!hasValidInputs || heightCm === null) {
       return null;
     }
 
-    return calculateCalorieTargets(weight, height, age, sex, activity);
-  }, [activity, age, hasValidInputs, height, sex, weight]);
+    return calculateCalorieTargets(weight, heightCm, age, sex, activity);
+  }, [activity, age, hasValidInputs, heightCm, sex, weight]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,7 +45,7 @@ export default function CalorieCalculatorForm() {
   return (
     <>
       <form className="grid gap-5" onSubmit={handleSubmit}>
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-4">
           <label className="grid gap-2 text-sm font-medium text-slate-700">
             Age (years)
             <input
@@ -56,13 +71,25 @@ export default function CalorieCalculatorForm() {
           </label>
 
           <label className="grid gap-2 text-sm font-medium text-slate-700">
-            Height (cm)
+            Feet → ফুট
             <input
               className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
               type="number"
-              min={1}
-              value={height}
-              onChange={(event) => setHeight(event.target.value === "" ? "" : Number(event.target.value))}
+              min={0}
+              value={heightFeet}
+              onChange={(event) => setHeightFeet(event.target.value === "" ? "" : Number(event.target.value))}
+              required
+            />
+          </label>
+
+          <label className="grid gap-2 text-sm font-medium text-slate-700">
+            Inches → ইঞ্চি
+            <input
+              className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
+              type="number"
+              min={0}
+              value={heightInches}
+              onChange={(event) => setHeightInches(event.target.value === "" ? "" : Number(event.target.value))}
               required
             />
           </label>
