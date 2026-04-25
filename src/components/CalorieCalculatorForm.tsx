@@ -1,118 +1,134 @@
+"use client";
+
+import { FormEvent, useMemo, useState } from "react";
+import { ACTIVITY_LABELS, ActivityLevel, calculateCalorieTargets, Sex } from "@/lib/calorie";
+
 export default function CalorieCalculatorForm() {
+  const [age, setAge] = useState<number | "">("");
+  const [weight, setWeight] = useState<number | "">("");
+  const [height, setHeight] = useState<number | "">("");
+  const [sex, setSex] = useState<Sex>("male");
+  const [activity, setActivity] = useState<ActivityLevel>("sedentary");
+  const [submitted, setSubmitted] = useState(false);
+
+  const hasValidInputs =
+    typeof age === "number" && age > 0 && typeof weight === "number" && weight > 0 && typeof height === "number" && height > 0;
+
+  const calories = useMemo(() => {
+    if (!hasValidInputs) {
+      return null;
+    }
+
+    return calculateCalorieTargets(weight, height, age, sex, activity);
+  }, [activity, age, hasValidInputs, height, sex, weight]);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitted(true);
+  };
+
   return (
-    <section className="w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-900/5 sm:p-8">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-          Calorie Calculator
-        </h1>
-        <p className="mt-2 text-sm text-slate-600 sm:text-base">
-          Add your details to estimate your daily calorie target.
-        </p>
-      </header>
-
-      <form className="grid grid-cols-1 gap-4 sm:grid-cols-2" aria-label="Calorie calculator form">
-        <div className="space-y-2">
-          <label htmlFor="age" className="text-sm font-medium text-slate-800">
-            Age
+    <>
+      <form className="grid gap-5" onSubmit={handleSubmit}>
+        <div className="grid gap-5 sm:grid-cols-3">
+          <label className="grid gap-2 text-sm font-medium text-slate-700">
+            Age (years)
+            <input
+              className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
+              type="number"
+              min={1}
+              value={age}
+              onChange={(event) => setAge(event.target.value === "" ? "" : Number(event.target.value))}
+              required
+            />
           </label>
-          <input
-            id="age"
-            name="age"
-            type="number"
-            inputMode="numeric"
-            min={1}
-            placeholder="e.g. 28"
-            className="h-12 w-full rounded-2xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-          />
-        </div>
 
-        <div className="space-y-2">
-          <label htmlFor="weight" className="text-sm font-medium text-slate-800">
+          <label className="grid gap-2 text-sm font-medium text-slate-700">
             Weight (kg)
+            <input
+              className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
+              type="number"
+              min={1}
+              value={weight}
+              onChange={(event) => setWeight(event.target.value === "" ? "" : Number(event.target.value))}
+              required
+            />
           </label>
-          <input
-            id="weight"
-            name="weight"
-            type="number"
-            inputMode="decimal"
-            min={1}
-            step="0.1"
-            placeholder="e.g. 70"
-            className="h-12 w-full rounded-2xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-          />
-        </div>
 
-        <div className="space-y-2">
-          <label htmlFor="height" className="text-sm font-medium text-slate-800">
+          <label className="grid gap-2 text-sm font-medium text-slate-700">
             Height (cm)
+            <input
+              className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
+              type="number"
+              min={1}
+              value={height}
+              onChange={(event) => setHeight(event.target.value === "" ? "" : Number(event.target.value))}
+              required
+            />
           </label>
-          <input
-            id="height"
-            name="height"
-            type="number"
-            inputMode="decimal"
-            min={1}
-            step="0.1"
-            placeholder="e.g. 175"
-            className="h-12 w-full rounded-2xl border border-slate-300 px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-          />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="gender" className="text-sm font-medium text-slate-800">
-            Gender
+        <div className="grid gap-5 sm:grid-cols-2">
+          <label className="grid gap-2 text-sm font-medium text-slate-700">
+            Sex
+            <select
+              className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
+              value={sex}
+              onChange={(event) => setSex(event.target.value as Sex)}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
           </label>
-          <select
-            id="gender"
-            name="gender"
-            defaultValue=""
-            className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-          >
-            <option value="" disabled>
-              Select gender
-            </option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
 
-        <div className="space-y-2 sm:col-span-2">
-          <label htmlFor="activityLevel" className="text-sm font-medium text-slate-800">
+          <label className="grid gap-2 text-sm font-medium text-slate-700">
             Activity level
+            <select
+              className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
+              value={activity}
+              onChange={(event) => setActivity(event.target.value as ActivityLevel)}
+            >
+              {Object.entries(ACTIVITY_LABELS).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
           </label>
-          <select
-            id="activityLevel"
-            name="activityLevel"
-            defaultValue=""
-            className="h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-          >
-            <option value="" disabled>
-              Select activity level
-            </option>
-            <option value="sedentary">Sedentary</option>
-            <option value="light">Light</option>
-            <option value="moderate">Moderate</option>
-            <option value="active">Active</option>
-          </select>
         </div>
 
         <button
+          className="w-full rounded-md bg-slate-900 px-4 py-3 font-semibold text-white transition hover:bg-slate-800"
           type="submit"
-          className="sm:col-span-2 mt-1 inline-flex h-12 w-full items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-emerald-200"
         >
-          Calculate Calories
+          Calculate calories
         </button>
       </form>
 
-      <aside className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
-        <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-          Your Results
-        </span>
-        <p className="mt-2 text-sm text-emerald-900">
-          Fill the form and tap calculate to view your estimated daily calorie
-          needs.
+      {submitted && !hasValidInputs && (
+        <p className="mt-5 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          Please enter valid values for age, weight, and height.
         </p>
-      </aside>
-    </section>
+      )}
+
+      {submitted && calories && (
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <article className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
+            <h2 className="text-sm font-medium text-slate-600">Maintenance calories</h2>
+            <p className="mt-2 text-2xl font-bold text-slate-900">{calories.maintenance} kcal/day</p>
+          </article>
+
+          <article className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
+            <h2 className="text-sm font-medium text-slate-600">Weight loss calories</h2>
+            <p className="mt-2 text-2xl font-bold text-slate-900">{calories.loss} kcal/day</p>
+          </article>
+
+          <article className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
+            <h2 className="text-sm font-medium text-slate-600">Weight gain calories</h2>
+            <p className="mt-2 text-2xl font-bold text-slate-900">{calories.gain} kcal/day</p>
+          </article>
+        </div>
+      )}
+    </>
   );
 }
