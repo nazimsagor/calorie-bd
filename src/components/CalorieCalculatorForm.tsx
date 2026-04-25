@@ -71,7 +71,7 @@ export default function CalorieCalculatorForm() {
           </label>
 
           <label className="grid gap-2 text-sm font-medium text-slate-700">
-            Feet
+            Feet → ফুট
             <input
               className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
               type="number"
@@ -83,7 +83,7 @@ export default function CalorieCalculatorForm() {
           </label>
 
           <label className="grid gap-2 text-sm font-medium text-slate-700">
-            Inches
+            Inches → ইঞ্চি
             <input
               className="rounded-md border border-slate-300 px-3 py-2 outline-none transition focus:border-slate-500"
               type="number"
